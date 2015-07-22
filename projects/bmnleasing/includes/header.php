@@ -40,7 +40,7 @@
  
 <head>
 <meta charset="utf-8">
-<title>GBFO</title>
+<title>BMN Leasing</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
@@ -96,80 +96,15 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="<?php echo $baseurl; ?>index.php">GBFO</a>
+        <a class="navbar-brand" href="<?php echo $baseurl; ?>index.php">BMN Leasing</a>
       </div>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li <?php if(strpos($page, 'truck_tracking.php') !== false) {echo "class='active'";} ?>><a href="truck_tracking.php">Tracking</a></li>
-          <li <?php if(strpos($page, 'list_of_fuel_records.php') !== false) {echo "class='active'";} ?>><a href="list_of_fuel_records.php">Fuel Sales</a></li>
-          
-
-          <li class='dropdown <?php if(strpos($page, 'list_of_trucks.php') !== false || strpos($page, 'individual_truck.php') !== false || strpos($page, 'list_of_trucks_simple.php') !== false || strpos($page, 'list_of_truck_readiness.php') !== false || strpos($page, 'list_of_trucks_and_tanks.php') !== false) {echo "active";} ?>'>
-            <a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-expanded='false'>Trucks <span class='caret'></span></a>
-            <ul class='dropdown-menu' role='menu'>
-              <li><a href='list_of_trucks.php'>Truck List</a></li>
-              <li><a href='list_of_truck_readiness.php'>Truck Readiness</a></li>
-              <li><a href='list_of_trucks_simple.php'>Truck List (simple)</a></li>
-              <li><a href='list_of_trucks_and_tanks.php'>Truck/Tank Cross Reference</a></li>
-              <li class='divider'></li>
-              <li><a href='list_of_truck_costs.php'>List of Truck Costs</a></li>
-            </ul>
-          </li>
-       
-          <li class='dropdown <?php if(strpos($page, 'list_of_leases.php') !== false || strpos($page, 'lease_info.php') !== false) {echo "active";} ?>'>
-            <a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-expanded='false'>Leases <span class='caret'></span></a>
-            <ul class='dropdown-menu' role='menu'>
-              <li><a href='list_of_lease_fuel_performance.php?Sort=Current_Pace&Sort_Order=DESC'>Lease Performance</a></li>
-              <li><a href='list_of_historical_lease_fuel_performance.php?Month=March&Sort=Penalty_Total&Sort_Order=DESC'>Historical Performance</a></li>
-              <li><a href='list_of_leases.php'>Lease List</a></li>
-            </ul>
-          </li>
-          
-          <li <?php if(strpos($page, 'list_of_tanks.php') !== false) {echo "class='active'";}?>><a href='list_of_tanks.php'>Tanks</a></li>
-          <li <?php if(strpos($page, 'list_of_a3s.php') !== false || strpos($page, 'individual_a3.php') !== false) {echo "class='active'";}?>><a href='list_of_a3s.php'>A3s</a></li>
-    
-          <!--<li <?php if(strpos($page, 'list_of_service.php') !== false || strpos($page, 'service.php') !== false) {echo "class='active'";} ?>><a href="list_of_service.php">Service</a></li>-->
-          <li class='dropdown <?php if(strpos($page, 'list_of_invoices.php') !== false || strpos($page, 'list_of_credits.php') !== false || strpos($page, 'list_of_payable_invoices.php') !== false || strpos($page, 'list_of_fuel_prices.php') !== false || strpos($page, 'list_of_purchase_orders.php') !== false || strpos($page, 'financials.php') !== false || strpos($page, 'financial_model.php') !== false || strpos($page, 'financial_variance.php') !== false) {echo "active";} ?>'>
-            <a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-expanded='false'>Financial <span class='caret'></span></a>
-            <ul class='dropdown-menu' role='menu'>
-              <li><a href='list_of_invoices.php'>Invoices</a></li>
-              <li><a href='list_of_credits.php'>Credits</a></li>
-              <li><a href='list_of_payable_invoices.php'>Payable Invoices</a></li>
-              <li><a href='list_of_fuel_prices.php'>Fuel Prices</a></li>
-              <li><a href='list_of_purchase_orders.php'>Purchase Orders</a></li>
-              <li class="divider"></li>
-              <li><a href='financial_snapshot.php'><b>Financial Snapshot</b></a></li><!--
-              <li><a href='financial_model.php'><b>Financial Model</b></a></li>
-              <li><a href='financial_variance.php'><b>Financial Variance</b></a></li>-->
-            </ul>
-          </li>
-          
-          <li class='dropdown <?php if(strpos($page, 'tvac_records.php') !== false || strpos($page, 'list_of_parts.php') !== false || strpos($page, 'company_directory.php') !== false || strpos($page, 'list_of_contacts.php') !== false || strpos($page, 'list_of_drivers.php') !== false || strpos($page, 'list_of_users.php') !== false || strpos($page, 'list_of_files.php') !== false || strpos($page, 'news_feed.php') !== false || strpos($page, 'reports.php') !== false || strpos($page, 'timesheet_admin.php') !== false || strpos($page,'timesheet.php') !== false) {echo "active";} ?>'>
-            <a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-expanded='false'>Miscellaneous <span class='caret'></span></a>
-            <ul class='dropdown-menu' role='menu'>
-              <li><a href='tvac_records.php'>TVAC Records</a></li>
-              <li><a href='list_of_parts.php'>Items</a></li>
-              <li><a href='company_directory.php'>Companies</a></li>
-              <?php if($_SESSION['Guest_Access'] <> 1) {echo "<li><a href='list_of_contacts.php'>Contacts</a></li>";} ?>
-              <li><a href='list_of_drivers.php'>Drivers</a></li>
-              <?php if($_SESSION['Guest_Access'] <> 1) {echo "<li><a href='list_of_users.php'>Users</a></li>";} ?>
-              <li><a href='list_of_files.php'>Files</a></li>
-              <li><a href='reports.php'>Reports</a></li>
-              <?php if($_SESSION['Guest_Access'] <> 1) {
-                if($_SESSION['User_Salary_Flag'] = 0 AND $_SESSION['User_Hourly_Flag'] = 0) {
-                  echo"<li><a href='timesheet_admin.php>Timesheets</a></li>";
-                }
-                else {
-                  echo"<li><a href='timesheet.php?User_ID=$User_ID&Week_Inc=0'>Timesheets</a></li>";
-                }   
-              }
-              ?>
-              <li><a href='help.php'>Help Contacts</a></li>
-            </ul>
-          </li>
+          <li <?php if(strpos($page, 'list_of_vehicles.php') !== false) {echo "class='active'";} ?>><a href="truck_tracking.php">Vehicles</a></li>
         </ul>
-        
-        <p class="navbar-text navbar-right pull-right" style="padding-right: 10px"><span class="hidden-xs hidden-sm hidden-md">Signed in as <?php echo $_SESSION['Name'];?> - </span><a href="logout.php">Log Out</a></p>
+        <p class="navbar-text navbar-right pull-right" style="padding-right: 10px"><span class="hidden-xs hidden-sm hidden-md">
+          Signed in as <?php echo $_SESSION['User_Full_Name'];?> - </span><a href="logout.php">Log Out</a>
+        </p>
       </div><!--/.nav-collapse -->
     </div>
   </div>

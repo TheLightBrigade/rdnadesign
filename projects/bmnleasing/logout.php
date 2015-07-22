@@ -1,4 +1,3 @@
-<?php require_once('includes/session.php'); ?>
 <?php 
   // Four steps to closing a session (ie logging out)
   
@@ -16,5 +15,5 @@
   // 4. Destroy the session
   session_destroy();
 
-  redirect_to("login.php?logout=1");
+  header("location: login.php");
 ?>

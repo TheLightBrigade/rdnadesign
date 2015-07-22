@@ -21,7 +21,7 @@
     
     if($Error_Message == '') {
       
-      $User_Lookup_Query = "SELECT User_ID, User_First_Name, User_Email, Username, Password FROM Users WHERE Username = :Username";
+      $User_Lookup_Query = "SELECT User_ID, User_First_Name, User_Last_Name, User_Email, Username, Password FROM Users WHERE Username = :Username";
       $User_Lookup_Query = $conn->prepare($User_Lookup_Query);
       $User_Lookup_Query->bindParam(':Username', $Username);
       $User_Lookup_Query->execute();
@@ -33,7 +33,7 @@
         //Login successful, set the Session variables
         $_SESSION['User_ID'] = $User_Lookup_Results['User_ID'];
         $_SESSION['User_First_Name'] = $User_Lookup_Results['User_First_Name'];
-        $_SESSION['User_Full_Name'] = $User_Lookup_Results['User_First_Name'] . $User_Lookup_Results['User_Last_Name'];
+        $_SESSION['User_Full_Name'] = $User_Lookup_Results['User_First_Name'] . " " . $User_Lookup_Results['User_Last_Name'];
         $_SESSION['User_Email'] = $User_Lookup_Results['User_Email'];
         
         header('Location: index.php');
