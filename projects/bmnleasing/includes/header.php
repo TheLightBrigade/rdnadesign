@@ -12,56 +12,15 @@
   $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
 
   //If this person isn't logged in, send them to the login page
-	if(!isset($_SESSION['Employee_ID'])) {
+	if(!isset($_SESSION['User_ID'])) {
   	$page = basename($_SERVER['PHP_SELF']);
 		header("Location: login.php");
 		exit;
 		echo "Why haven't I left yet?";
 	}
 	
-	//If they're logged in, but an external user, send them to the external index page
-	if(isset($_SESSION['User_Internal']) && $_SESSION['User_Internal'] == 0) {
-    header("Location: external/index.php");
-	}
-
-  if($_SESSION['Employee_ID'] == 1 || $_SESSION['Employee_ID'] == 3) {
-    error_reporting(E_ALL);
-  }
-  else {
-    error_reporting(0);
-    //header("Location: down_for_maintenance.php");
-  }
-  
-  //Include the database connection
-  include ('includes/gbfodata.php');
-  include ('includes/functions.php');
-	
-	//Check if there are any page-specific permissions for this page
-	// 0: No access (redirect immediately)
-	// 1: Read-only access
-	// 2: Read/write access
-	// 3: Read/write/edit/delete access
-	$Page_Lookup = basename($_SERVER['PHP_SELF']);
-	$query = "SELECT Permission_Level FROM Permission_Level_Per_Page WHERE Page = :Page AND User_ID = :User_ID LIMIT 1";
-	$stmt = $conn->prepare($query);
-	$stmt->bindParam(':Page', $Page_Lookup);
-	$stmt->bindParam(':User_ID', $_SESSION['Employee_ID']);
-	$stmt->execute();
-	$result = $stmt->fetchColumn();
-
-	//If there is a page-specific permission, use that.
-	if(!empty($result)) {
-  	$Permission_Level = $result;
-  }
-  //Otherwise, use the general permission level set in Users and stored in the Session
-	else {
-  	$Permission_Level = $_SESSION['Permission_Level'];
-  }
-  
-  //If this user's permission level is 0, redirect them to their safe place
-	if($Permission_Level == 0) {
-  	header("Location: " . $_SESSION['Redirect_Page']);
-	}
+	//Include the database connection
+  include ('includes/db.php');
 	
 	//Set the current page for future reference	  
   //$page = basename($_SERVER['PHP_SELF']); //Get the current page name
@@ -73,19 +32,8 @@
   date_default_timezone_set("America/New_York");
 
   //Set the default money business to USD
-  setlocale(LC_MONETARY, 'en_US');
-  
-  //Let's log this user page interaction, shall we? 
-  $Interaction_Timestamp = date('Y-m-d H:i:s');
-  $User_ID = $_SESSION['Employee_ID'];
-  $User_First_Name = $_SESSION['User_First_Name'];
-
-//  if($User_ID == 1) {header("Location: index.php");}
-//  header("Location: down_for_maintenance.php");
-
-  $query = "INSERT INTO User_Page_Interactions (User_ID, Interaction_Timestamp, Page_Viewed) VALUES ('$User_ID', '$Interaction_Timestamp', '$page')";
-  $result = mysql_query($query) or die("There was an error logging the user page interaction: " . mysql_error());
-?>
+  setlocale(LC_MONETARY, 'en_US'); 
+ ?>
 
 <!DOCTYPE html>
 <html lang="en">

@@ -1,95 +1,49 @@
-<?php require_once("includes/db.php"); ?>
-<?php require_once('includes/functions.php'); ?>
-<?php
-
-	//If the $page variable's been set AND this is an internal user, redirect them to their page
-	if (isset($_GET['page'])) {
-		$page = $_GET['page'];
-	}
-	//For everything else, just redirect to the main index.php page
-	else {
-  	$page = "index.php"; 
-	}
+<?php 
+  error_reporting(E_ALL);
+  require_once("includes/db.php");
+  
+  session_start();
 	
-	// START FORM PROCESSING
-	if (isset($_POST['submit'])) { // Form has been submitted.
-		$errors = array();
+	if(isset($_POST['submit'])) {
+  	
+    $Error_Message = '';
+    //username and password sent from Form
+    $Username = trim($_POST['username']);
+    $Password = trim($_POST['password']);
+    
+    if($Username == '') {
+      $Error_Message .= 'You must enter your Username<br>';
+    }
+    
+    if($Password == '') {
+      $Error_Message .= 'You must enter your Password<br>';
+    }
+    
+    if($Error_Message == '') {
+      
+      $User_Lookup_Query = "SELECT User_ID, User_First_Name, User_Email, Username, Password FROM Users WHERE Username = :Username";
+      $User_Lookup_Query = $conn->prepare($User_Lookup_Query);
+      $User_Lookup_Query->bindParam(':Username', $Username);
+      $User_Lookup_Query->execute();
+      
+      $User_Lookup_Results = $User_Lookup_Query->fetch(PDO::FETCH_ASSOC);
+       
+      if(count($User_Lookup_Results) > 0 && sha1($Password) == $User_Lookup_Results['Password']) {
 
-		// perform validations on the form data
-		$required_fields = array('username', 'password');
-		$errors = array_merge($errors, check_required_fields($required_fields, $_POST));
-
-		$fields_with_lengths = array('username' => 50, 'password' => 50);
-		$errors = array_merge($errors, check_max_field_lengths($fields_with_lengths, $_POST));
-
-		$Username = trim(mysql_prep($_POST['username']));
-		$password = trim(mysql_prep($_POST['password']));
-		$Hashed_Password = sha1($password);
-		
-		if ( empty($errors) ) {
-			// Check database to see if username and the hashed password exist there.
-			$query = "SELECT * ";
-			$query .= "FROM Users ";
-			$query .= "WHERE Username = '{$Username}' ";
-			$query .= "AND Hashed_Password = '{$Hashed_Password}' ";
-			$query .= "LIMIT 1";
-			$result_set = mysql_query($query) or die('There was an error: ' . mysql_error());
-			confirm_query($result_set);
-			if (mysql_num_rows($result_set) == 1) {
-				// username/password authenticated
-				// and only 1 match
-				$found_user = mysql_fetch_array($result_set);
-				
-				$_SESSION['Employee_ID'] = $found_user['Employee_ID'];
-				$_SESSION['Name'] = $found_user['Name'];
-				$_SESSION['Username'] = $found_user['Username'];
-				$_SESSION['Email'] = $found_user['Email'];
-				$_SESSION['Admin'] = $found_user['Admin'];
-				$_SESSION['User_Fueler'] = $found_user['User_Fueler'];
-				$_SESSION['Finance'] = $found_user['Finance'];
-				$_SESSION['User_Internal'] = $found_user['User_Internal'];
-				$_SESSION['Company_ID'] = $found_user['Company_ID'];
-				$_SESSION['Guest_Access'] = $found_user['Guest_Access'];
-				$_SESSION['User_First_Name'] = $found_user['User_First_Name'];
-				$_SESSION['Permission_Level'] = $found_user['Permission_Level'];
-				$_SESSION['Redirect_Page'] = $found_user['Redirect_Page'];
-				
-				//Log this login
-				$Login_User_ID = $_SESSION['Employee_ID'];
-				$Login_Timestamp = $date = date('Y-m-d H:i:s');
-				$Login_History_Query = "INSERT INTO Login_History (Login_Employee_ID, Login_Timestamp) VALUES ('$Login_User_ID', '$Login_Timestamp')"; 
-				$Login_History_Result = mysql_query($Login_History_Query) or die("There was an error: " . mysql_error()); 
-				
-				//Put in custom "homepage" settings
-				if (!isset($_GET['page'])) {
-  				
-				  if($_SESSION['Employee_ID'] == 9) {
-  				  //Charlie
-  				  $page = 'list_of_truck_readiness.php';}
-  				}
-  				
-  				header('Location: ' . $page);
-				
-			} else {
-				// username/password combo was not found in the database
-				$message = "Username/password combination incorrect.<br />
-					Please make sure your caps lock key is off and try again.";
-			}
-		} else {
-			if (count($errors) == 1) {
-				$message = "There was 1 error in the form.";
-			} else {
-				$message = "There were " . count($errors) . " errors in the form.";
-			}
-		}
-		
-	} else { // Form has not been submitted.
-		if (isset($_GET['logout']) && $_GET['logout'] == 1) {
-			$message = "<p class='alert alert-success'>You are now logged out.</p>";
-		} 
-		$username = "";
-		$password = "";
-	}
+        //Login successful, set the Session variables
+        $_SESSION['User_ID'] = $User_Lookup_Results['User_ID'];
+        $_SESSION['User_First_Name'] = $User_Lookup_Results['User_First_Name'];
+        $_SESSION['User_Full_Name'] = $User_Lookup_Results['User_First_Name'] . $User_Lookup_Results['User_Last_Name'];
+        $_SESSION['User_Email'] = $User_Lookup_Results['User_Email'];
+        
+        header('Location: index.php');
+        exit;
+      }
+      else {
+        $Error_Message .= "Username and/or password are not found.";
+      } 
+    }
+  }
 ?>
 
 <!DOCTYPE html>
@@ -143,6 +97,12 @@
   </div>
   
   <div class="container">
+    <?php
+      if(isset($Error_Message)) {
+        echo "<div class='col-md-12 col-xs-12 alert alert-danger'>$Error_Message</div>";
+      }
+    ?>
+    
     <div class="row">      
       <div id="login" class="col-md-6 col-md-offset-3">
       
