@@ -100,7 +100,7 @@
       </div>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li <?php if(strpos($page, 'list_of_vehicles.php') !== false) {echo "class='active'";} ?>><a href="truck_tracking.php">Vehicles</a></li>
+          <li <?php if(strpos($page, 'list_of_vehicles.php') !== false) {echo "class='active'";} ?>><a href="list_of_vehicles.php">Vehicles</a></li>
         </ul>
         <p class="navbar-text navbar-right pull-right" style="padding-right: 10px"><span class="hidden-xs hidden-sm hidden-md">
           Signed in as <?php echo $_SESSION['User_Full_Name'];?> - </span><a href="logout.php">Log Out</a>
